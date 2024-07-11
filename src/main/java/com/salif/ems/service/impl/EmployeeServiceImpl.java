@@ -7,6 +7,7 @@ import com.salif.ems.repository.EmployeeRepository;
 import com.salif.ems.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 @Service
 @AllArgsConstructor
@@ -17,5 +18,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    }
+
+    @Override
+    public EmployeeDto getEmployeeByid(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() ->
+                        new ResourceAccessException("No employee with such ID exists." +employeeId));
+        return EmployeeMapper.mapToEmployeeDto(employee);
     }
 }
