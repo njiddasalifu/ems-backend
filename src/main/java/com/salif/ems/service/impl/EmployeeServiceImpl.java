@@ -2,6 +2,7 @@ package com.salif.ems.service.impl;
 
 import com.salif.ems.dto.EmployeeDto;
 import com.salif.ems.entity.Employee;
+import com.salif.ems.exception.ResourceNotFoundException;
 import com.salif.ems.mapper.EmployeeMapper;
 import com.salif.ems.repository.EmployeeRepository;
 import com.salif.ems.service.EmployeeService;
@@ -36,5 +37,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employees = employeeRepository.findAll();
         return employees.stream().map((employee) -> EmployeeMapper.mapToEmployeeDto(employee))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public EmployeeDto updateEmployee(Long employeeId, EmployeeDto updatedEmployee) {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new ResourceNotFoundException("Empoyee does not exist with id: " +employeeId)
+        );
+        //updating the values
+        employee.setFirstname(updatedEmployee.getFirstName());
+        employee.setLastname(updatedEmployee.getLastName());
+        employee.setEmail(updatedEmployee.getEmail());
+        //saving the employee object
+        Employee updatedEmployeeObj = employeeRepository.save(employee);
+        return EmployeeMapper.mapToEmployeeDto(updatedEmployeeObj);
+    }
+
+    @Override
+    public void deleteEmployee(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new ResourceNotFoundException("Empoyee does not exist with id: " +employeeId)
+        );
+        employeeRepository.deleteById(employeeId);
     }
 }
