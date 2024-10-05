@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
   
   # Copy the JAR file into the container
-COPY target/employee-management-system.jar /app/employee-management-system.jar
+COPY target/ems-backend-0.0.1-SNAPSHOT.jar /app/ems-backend.jar
   
   # Specify the command to run the JAR file
-ENTRYPOINT ["java", "-jar", "employee-management-system.jar"]
+ENTRYPOINT ["java", "-jar", "/app/ems-backend.jar"]
